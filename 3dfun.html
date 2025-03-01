@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D长条形态可变色角色</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a1a;
+            overflow: hidden;
+            perspective: 1000px;
+            font-family: sans-serif;
+        }
+        
+        .container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transform-style: preserve-3d;
+        }
+        
+        .character {
+            position: relative;
+            width: 60px;
+            height: 240px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+            will-change: transform;
+            cursor: grab;
+        }
+        
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #64ffda;
+            border: 2px solid #333;
+            transition: background-color 0.3s ease;
+            backface-visibility: visible;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+        }
+        
+        .front {
+            transform: translateZ(30px);
+        }
+        
+        .back {
+            transform: translateZ(-30px) rotateY(180deg);
+        }
+        
+        .left {
+            transform: rotateY(-90deg) translateZ(30px);
+        }
+        
+        .right {
+            transform: rotateY(90deg) translateZ(30px);
+        }
+        
+        .top {
+            transform: rotateX(90deg) translateZ(30px);
+            height: 60px;
+        }
+        
+        .bottom {
+            transform: rotateX(-90deg) translateZ(210px);
+            height: 60px;
+        }
+        
+        .eye {
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+        
+        .eye.left {
+            top: 50px;
+            left: 10px;
+        }
+        
+        .eye.right {
+            top: 50px;
+            right: 10px;
+        }
+        
+        .pupil {
+            position: absolute;
+            width: 10px;
+            height: 15px;
+            background-color: #333;
+            border-radius: 50%;
+            top: 7px;
+            left: 5px;
+            transition: transform 0.2s ease-out;
+        }
+        
+        .mouth {
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            background-color: #FF6B6B;
+            border-radius: 0 0 15px 15px;
+            border: 2px solid #333;
+            top: 100px;
+            left: 15px;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            text-align: center;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        @keyframes colorChange {
+            0% { background-color: #64ffda; box-shadow: 0 0 20px rgba(100, 255, 218, 0.8); }
+            20% { background-color: #ff64a6; box-shadow: 0 0 25px rgba(255, 100, 166, 0.8); }
+            40% { background-color: #ff9e64; box-shadow: 0 0 25px rgba(255, 158, 100, 0.8); }
+            60% { background-color: #ffea64; box-shadow: 0 0 25px rgba(255, 234, 100, 0.8); }
+            80% { background-color: #64ff8e; box-shadow: 0 0 25px rgba(100, 255, 142, 0.8); }
+            100% { background-color: #64c0ff; box-shadow: 0 0 25px rgba(100, 192, 255, 0.8); }
+        }
+        
+        .wiggling .face {
+            animation: colorChange 0.8s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="character" id="character">
+            <div class="face front">
+                <div class="eye left">
+                    <div class="pupil" id="leftPupil"></div>
+                </div>
+                <div class="eye right">
+                    <div class="pupil" id="rightPupil"></div>
+                </div>
+                <div class="mouth"></div>
+            </div>
+            <div class="face back"></div>
+            <div class="face left"></div>
+            <div class="face right"></div>
+            <div class="face top"></div>
+            <div class="face bottom"></div>
+        </div>
+        <div class="instructions">
+            <p>移动鼠标让角色摇晃！摇晃幅度大时会变色闪烁！</p>
+        </div>
+    </div>
+
+    <script>
+        const character = document.getElementById('character');
+        const container = document.getElementById('container');
+        const leftPupil = document.getElementById('leftPupil');
+        const rightPupil = document.getElementById('rightPupil');
+        const faces = document.querySelectorAll('.face');
+        
+        // 跟踪鼠标位置
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        // 跟踪上一次鼠标位置，用于计算速度
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        
+        // 跟踪鼠标速度
+        let speedX = 0;
+        let speedY = 0;
+        
+        // 角色的初始位置
+        let characterX = 0;
+        let characterY = 0;
+        let characterZ = 0;
+        
+        // 摇晃系数
+        const shakeIntensity = 0.03;
+        
+        // 跟踪鼠标移动
+        document.addEventListener('mousemove', (e) => {
+            // 计算鼠标相对于窗口中心的位置
+            mouseX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+            mouseY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+            
+            // 计算鼠标速度
+            speedX = Math.abs(mouseX - lastMouseX);
+            speedY = Math.abs(mouseY - lastMouseY);
+            
+            // 保存当前位置作为下一次的上一次位置
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+            
+            // 更新眼睛位置
+            updateEyes();
+            
+            // 更新角色的摇晃
+            updateCharacterShake();
+            
+            // 检查是否应该触发变色效果
+            checkColorChange();
+        });
+        
+        function updateEyes() {
+            // 限制眼睛移动范围
+            const maxEyeMove = 5;
+            
+            // 计算眼睛位置
+            const eyeX = mouseX * maxEyeMove;
+            const eyeY = mouseY * maxEyeMove;
+            
+            // 应用变换
+            leftPupil.style.transform = `translate(${eyeX}px, ${eyeY}px)`;
+            rightPupil.style.transform = `translate(${eyeX}px, ${eyeY}px)`;
+        }
+        
+        function updateCharacterShake() {
+            // 计算角色位置 - 3D变换
+            characterX = mouseX * 30;
+            characterY = mouseY * 20;
+            characterZ = (Math.abs(mouseX) + Math.abs(mouseY)) * 50;
+            
+            // 添加摇晃效果
+            const shakeX = Math.sin(Date.now() * shakeIntensity) * 5 * Math.abs(mouseX);
+            const shakeY = Math.cos(Date.now() * shakeIntensity) * 5 * Math.abs(mouseY);
+            
+            // 应用3D变换
+            character.style.transform = `
+                translateX(${characterX + shakeX}px) 
+                translateY(${characterY + shakeY}px)
+                translateZ(${characterZ}px)
+                rotateX(${-mouseY * 30}deg) 
+                rotateY(${mouseX * 30}deg)
+                rotateZ(${mouseX * mouseY * 15}deg)
+            `;
+            
+            // 更新容器透视效果
+            container.style.perspective = `${1000 + characterZ * 2}px`;
+        }
+        
+        function checkColorChange() {
+            // 计算总体速度
+            const totalSpeed = speedX + speedY;
+            
+            // 如果速度超过阈值，触发变色效果
+            if (totalSpeed > 0.05) {
+                character.classList.add('wiggling');
+            } else {
+                character.classList.remove('wiggling');
+            }
+        }
+        
+        // 初始化动画循环
+        function animate() {
+            // 添加持续的小幅度动画，使角色看起来更生动
+            const idleX = Math.sin(Date.now() * 0.001) * 2;
+            const idleY = Math.cos(Date.now() * 0.001) * 2;
+            const idleRotateZ = Math.sin(Date.now() * 0.0005) * 3;
+            
+            // 只在鼠标不动时应用这个效果
+            if (speedX < 0.001 && speedY < 0.001) {
+                character.style.transform = `
+                    translateX(${idleX}px) 
+                    translateY(${idleY}px)
+                    rotateZ(${idleRotateZ}deg)
+                `;
+            }
+            
+            // 速度衰减
+            speedX *= 0.98;
+            speedY *= 0.98;
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // 移动端触摸支持
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            
+            // 计算触摸相对于窗口中心的位置
+            mouseX = (touch.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+            mouseY = (touch.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+            
+            // 计算触摸速度
+            speedX = Math.abs(mouseX - lastMouseX);
+            speedY = Math.abs(mouseY - lastMouseY);
+            
+            // 保存当前位置作为下一次的上一次位置
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+            
+            updateEyes();
+            updateCharacterShake();
+            checkColorChange();
+        }, { passive: false });
+        
+        // 双击/点击效果
+        document.addEventListener('click', () => {
+            // 模拟一个大力摇晃
+            speedX = 0.2;
+            speedY = 0.2;
+            checkColorChange();
+            
+            // 添加一个跳跃动画
+            character.style.transform = `
+                translateY(-50px)
+                rotateZ(${Math.random() * 40 - 20}deg)
+            `;
+            
+            setTimeout(() => {
+                character.style.transform = `
+                    translateY(0)
+                `;
+            }, 300);
+        });
+    </script>
+</body>
+</html>
