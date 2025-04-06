@@ -6,16 +6,16 @@
     position: fixed;
     top: 0;
     width: 100%; /* 調整寬度，根據你的需求 */
-    height: 125vh; /* 占滿整個視窗高度 */
+    height: 100vh; /* 占滿整個視窗高度 */
     background-size: cover;
     background-position: center;
     filter: blur(0.5px); /* 模糊效果，調整數值以改變模糊程度 */
     z-index: 0; /* 確保在主要內容之下 */
-    opacity: 0.5; /* 降低透明度，讓背景不過於顯眼 */
+    opacity: 0.6; /* 降低透明度，讓背景不過於顯眼 */
 }
 .side-image-left {
     /* background-image: url('images/Clipped_image_20250406_115943.png');*/
-     background-image: url('images/IMG_20250406_115917_729.jpg');
+     background-image: url('images/VideoCapture_20250406-153542.jpg');
  }
 /* 左側圖片 */
 /*.side-image-left {
