@@ -566,7 +566,7 @@ updateTogetherTime();
            
                     <div class="video-wrapper">
                         <video class="surprise-video" controls autoplay>
-                            <source src="images/sss.mp4" type="video/mp4">
+                            <source src="sss.mp4" type="video/mp4">
                             您的瀏覽器不支援播放此影片。
                         </video>
                     </div>
