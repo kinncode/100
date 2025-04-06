@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>給我最愛的人</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great_Vibes&display=swap" rel="stylesheet">
+</head>
+<body><!-- 兩側模糊大圖 -->
+    <div class="side-image side-image-left"></div>
+    <div class="side-image side-image-right"></div>
+    <!-- 歡迎畫面 -->
+    <div class="welcome-screen">
+        <div class="welcome-content">
+            <h1>為你準備的浪漫驚喜</h1>
+            <p>點擊下方按鈕開始我們的浪漫旅程</p>
+            <button type="button" id="start-btn">開始浪漫之旅 <i class="fas fa-heart"></i></button>
+        </div>
+    </div>
+
+    <!-- 主要內容容器 -->
+    <div class="container hidden">
+        <div class="hearts-container"></div>
+        <div class="rose-petals-container"></div>
+        
+        <div class="content">
+            <h1 class="title">給我最愛的人</h1>
+            <p style="font-size: 1rem; color: #ddd;">紀念我們從2025年1月1日開始的100天</p>
+            <!-- 倒數計時器 -->
+            <div class="countdown-container">
+                <div class="countdown-title">我們在一起已經</div>
+                <div class="countdown-display">
+                    <div class="countdown-item">
+                        <div id="countdown-days" class="countdown-value">0</div>
+                        <div class="countdown-label">天</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div id="countdown-hours" class="countdown-value">0</div>
+                        <div class="countdown-label">小時</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div id="countdown-minutes" class="countdown-value">0</div>
+                        <div class="countdown-label">分鐘</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div id="countdown-seconds" class="countdown-value">0</div>
+                        <div class="countdown-label">秒</div>
+                    </div>
+                </div>
+                <!-- 額外提示 -->
+                <div style="font-size: 0.9rem; color: #ddd; margin-top: 10px;">
+                    從2025年1月1日開始，迎接我們的100天紀念
+                </div>
+            </div>
+            
+            <div class="message-container">
+                <div id="typed-text"></div>
+                <div id="cursor"></div>
+            </div>
+            
+            <div class="gallery">
+                <div class="photo-container">
+                    <div class="photo polaroid" draggable="true" style="--random-rotate: -5deg;">
+                        <img src="images/IMG_20250101_002149_689.webp" alt="回憶1">
+                        <div class="photo-caption">我們在一起那一天</div>
+                        <div class="photo-description">那天的陽光特別明媚，就像你的笑容一樣溫暖。</div>
+                    </div>
+                    <div class="photo polaroid" draggable="true" style="--random-rotate: 3deg;">
+                        <img src="images\IMG_20250123_152526_989.webp" alt="回憶2">
+                        <div class="photo-caption">第一次約會</div>
+                        <div class="photo-description">在那家咖啡廳，我們聊了整整一個下午，時間過得如此之快。</div>
+                    </div>
+                    <div class="photo polaroid" draggable="true" style="--random-rotate: -2deg;">
+                        <img src="images\IMG_20250309_175733_150.webp" alt="回憶3">
+                        <div class="photo-caption">我們可愛樣子</div>
+                        <div class="photo-description">那天我們早早起床，一起看著太陽從海平面升起，美得讓人窒息。</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button id="music-btn" class="btn">
+                    <i class="fas fa-music"></i> <span id="music-text">暫停音樂</span>
+                </button>
+                <button id="surprise-btn" class="btn">🎁 特別驚喜</button>
+                <div id="surpriseModal" class="modal"></div>
+                
+                    
+                </button>
+                <button id="memory-btn" class="btn">
+                    <i class="fas fa-heart"></i>我眼中的你
+                </button>
+                <button id="love-letter-btn" class="btn">
+                    <i class="fas fa-envelope"></i> 愛的告白
+                </button>
+                <button id="diary-btn" class="btn">
+                    <i class="fas fa-book"></i> 我們的日記
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隱藏寶藏 -->
+    <div class="hidden-treasure" id="treasure1" style="top: 20%; left: 10%;"></div>
+    <div class="hidden-treasure" id="treasure2" style="top: 40%; left: 85%;"></div>
+    <div class="hidden-treasure" id="treasure3" style="top: 70%; left: 30%;"></div>
+    
+    <!-- 寶藏訊息模態框 -->
+    <div class="treasure-message" id="treasure-message">
+        <p id="treasure-text"></p>
+        <button id="close-treasure">關閉</button>
+    </div>
+
+    <!-- 回憶時光模態框 -->
+    <div class="memory-timeline-modal" id="memory-timeline-modal"></div>
+
+    <!-- 愛的告白模態框 -->
+    <div class="love-letter-modal" id="love-letter-modal"></div>
+
+    <!-- 特別驚喜模態框 -->
+    <div class="surprise-modal" id="surprise-modal"></div>
+<!-- 日記模態框 -->
+<div class="diary-modal" id="diary-modal">
+    <div class="diary-book">
+        <div class="diary-page left-page"></div>
+        <div class="diary-page right-page"></div>
+    </div>
+    <button class="prev-page"><i class="fas fa-chevron-left"></i></button>
+    <button class="next-page"><i class="fas fa-chevron-right"></i></button>
+    <button class="close-diary"><i class="fas fa-times"></i></button>
+</div>
+
+    <!-- 特效容器 -->
+    <div id="stars-container"></div>
+    <div id="shooting-stars-container"></div>
+    <div id="fireflies-container"></div>
+
+    <!-- 音樂播放器 -->
+    <audio id="background-music" loop>
+        <source src="https://s3.vocalremoveroak.com//input/origin/2024-12-01/yungkai-blueOfficialAudio.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    
+</body>
+</html>
