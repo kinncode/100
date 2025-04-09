@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     });
     // 設定起始日期為2025年1月1日
-    const startDate = new Date('2025-01-01T00:00:00').getTime();
+    const startDate = new Date('2024-12-31T00:00:00').getTime();
 
 // 更新計時器的函數
     function updateTogetherTime() {
