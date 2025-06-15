@@ -63,14 +63,14 @@
     }
     h1 {
       text-align: center;
-      font-size: 20px;
+      font-size: 22px;
       margin-bottom: 15px;
     }
     select {
       width: 100%;
       padding: 8px;
       margin-bottom: 15px;
-      font-size: 14px;
+      font-size: 16px;
       border-radius: 4px;
       box-sizing: border-box;
     }
@@ -80,7 +80,7 @@
     .question p {
       font-weight: bold;
       margin-bottom: 8px;
-      font-size: 14px;
+      font-size: 16px;
     }
     .question img {
       max-width: 100%;
@@ -93,7 +93,7 @@
     label {
       display: block;
       margin-bottom: 5px;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1.4;
     }
     input[type="radio"], input[type="checkbox"] {
@@ -108,7 +108,7 @@
       border-radius: 4px;
       cursor: pointer;
       width: 100%;
-      font-size: 14px;
+      font-size: 16px;
       margin-top: 10px;
       box-sizing: border-box;
     }
@@ -123,7 +123,7 @@
     }
     .result {
       margin-top: 8px;
-      font-size: 12px;
+      font-size: 14px;
     }
     .correct {
       color: green;
@@ -135,12 +135,12 @@
       margin-top: 15px;
       font-weight: bold;
       text-align: center;
-      font-size: 14px;
+      font-size: 16px;
     }
     a {
       color: #007bff;
       text-decoration: underline;
-      font-size: 12px;
+      font-size: 14px;
     }
     a:hover {
       color: #0056b3;
@@ -153,36 +153,36 @@
     @media (max-width: 600px) {
       body {
         padding: 5px;
-        font-size: 14px;
+        font-size: 15px;
       }
       .container {
         padding: 10px;
       }
       h1 {
-        font-size: 18px;
+        font-size: 20px;
       }
       select {
-        font-size: 12px;
+        font-size: 14px;
         padding: 6px;
       }
       .question p {
-        font-size: 12px;
+        font-size: 14px;
       }
       label {
-        font-size: 12px;
+        font-size: 14px;
       }
       button {
-        font-size: 12px;
+        font-size: 14px;
         padding: 8px;
       }
       .result {
-        font-size: 11px;
-      }
-      #total-result {
         font-size: 12px;
       }
+      #total-result {
+        font-size: 14px;
+      }
       a {
-        font-size: 11px;
+        font-size: 12px;
       }
     }
   </style>
@@ -849,6 +849,7 @@
           `;
           quizContainer.appendChild(questionDiv);
         });
+        window.scrollTo(0, 0); // 每次渲染新測驗時滾動到頂部
       } catch (error) {
         console.error('題目生成失敗:', error);
         quizContainer.innerHTML = '<p style="color: red;">題目載入失敗，請檢查程式碼或瀏覽器設定。</p>';
@@ -865,6 +866,7 @@
 
     // 提交答案
     submitButton.addEventListener('click', () => {
+      const scrollPosition = window.scrollY; // 保存當前滾動位置
       const questions = quizzes[quizSelect.value];
       let score = 0;
       const total = questions.length;
@@ -895,6 +897,7 @@
       nextUnitButton.style.display = 'block';
       const currentIndex = quizOrder.indexOf(quizSelect.value);
       nextUnitButton.textContent = currentIndex < quizOrder.length - 1 ? '下一個單元' : '回到第一單元';
+      window.scrollTo(0, scrollPosition); // 恢復滾動位置
     });
 
     // 下一個單元
