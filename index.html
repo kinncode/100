@@ -90,6 +90,11 @@
       border-radius: 4px;
       display: block;
     }
+    .image-error {
+      color: red;
+      font-size: 14px;
+      margin: 8px 0;
+    }
     label {
       display: block;
       margin-bottom: 5px;
@@ -182,6 +187,9 @@
         font-size: 14px;
       }
       a {
+        font-size: 12px;
+      }
+      .image-error {
         font-size: 12px;
       }
     }
@@ -707,7 +715,7 @@
       component: [
         {
           id: 'component-q1',
-          text: '元件圖主要是描述什麼元件之間的靜態結構關係？',
+          text: '元件圖主要是描述何種元件之間的靜態結構關係？',
           type: 'radio',
           options: [
             { value: 'A', label: '角色' },
@@ -732,7 +740,7 @@
         {
           id: 'component-q3',
           text: '附件中的圖形是那一種UML圖？',
-          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam/33219/kques/362/715112fc1b4e.png',
+          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam.33219/kques.803640/715112fc4b56b3e5c054fd697c41e80b.png',
           type: 'radio',
           options: [
             { value: 'A', label: '部署圖' },
@@ -745,7 +753,7 @@
         {
           id: 'component-q4',
           text: '附件中的圖形中有多少個介面？',
-          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam/33219/kques/362/664/ce556f858750f3d74434fc948170f65d.png',
+          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam.33219/kques.803642/ce556f858750f3d74439fc948170f65d.png',
           type: 'radio',
           options: [
             { value: 'A', label: '1' },
@@ -770,7 +778,7 @@
         {
           id: 'component-q6',
           text: '附件中的圖形是哪一種UML圖？',
-          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam/33219/kques/362/164/4ed36153cac9dea621ecdcde29776.png',
+          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam.33219/kques.803641/4ed36153cacdea6217ec62923ce29776.png',
           type: 'radio',
           options: [
             { value: 'A', label: '類別圖' },
@@ -783,7 +791,7 @@
         {
           id: 'component-q7',
           text: '附件中的圖形中有多少個節點？',
-          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam/33219/kques/362/173/731c1867986f22cdbb9300f84c2.png',
+          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam.33219/kques.803643/731c1867986f22cdbb9300f4300c84c2.png',
           type: 'radio',
           options: [
             { value: 'A', label: '2' },
@@ -861,7 +869,11 @@
           questionDiv.className = 'question';
           questionDiv.innerHTML = `
             <p>${index + 1}. ${q.text}</p>
-            ${q.image ? `<img src="${q.image}" alt="UML Diagram"><br><a href="${q.image}" target="_blank">查看原始圖片</a>` : ''}
+            ${q.image ? `
+              <img src="${q.image}" alt="UML Diagram" id="img-${q.id}">
+              <p id="error-${q.id}" class="image-error" style="display: none;">圖片無法載入，請檢查網路或<a href="${q.image}" target="_blank">查看原始連結</a></p>
+              <br><a href="${q.image}" target="_blank">查看原始圖片</a>
+            ` : ''}
             ${shuffledOptions.map(option => `
               <label>
                 <input type="${q.type}" name="${q.id}" value="${option.value}">
@@ -871,6 +883,20 @@
             <p id="result-${q.id}" class="result"></p>
           `;
           quizContainer.appendChild(questionDiv);
+
+          // 添加圖片載入錯誤處理
+          if (q.image) {
+            const img = document.getElementById(`img-${q.id}`);
+            const errorP = document.getElementById(`error-${q.id}`);
+            img.onerror = () => {
+              img.style.display = 'none';
+              errorP.style.display = 'block';
+            };
+            img.onload = () => {
+              img.style.display = 'block';
+              errorP.style.display = 'none';
+            };
+          }
         });
         window.scrollTo(0, 0); // 渲染新測驗時滾動到頂部
       } catch (error) {
