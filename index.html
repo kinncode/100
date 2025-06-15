@@ -41,56 +41,64 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
   <title>物件導向程式設計測驗</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
       margin: 0;
-      padding: 20px;
+      padding: 10px;
+      font-size: 16px;
     }
     .container {
       background-color: white;
-      padding: 20px;
+      padding: 15px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
+      max-width: 800px;
       width: 100%;
       margin: 0 auto;
+      box-sizing: border-box;
     }
     h1 {
       text-align: center;
-      font-size: 24px;
-      margin-bottom: 20px;
+      font-size: 20px;
+      margin-bottom: 15px;
     }
     select {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      font-size: 16px;
+      padding: 8px;
+      margin-bottom: 15px;
+      font-size: 14px;
       border-radius: 4px;
+      box-sizing: border-box;
     }
     .question {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     .question p {
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
     }
     .question img {
       max-width: 100%;
       height: auto;
-      margin: 10px 0;
+      margin: 8px 0;
       border: 1px solid #ddd;
       border-radius: 4px;
+      display: block;
     }
     label {
       display: block;
       margin-bottom: 5px;
+      font-size: 14px;
+      line-height: 1.4;
     }
     input[type="radio"], input[type="checkbox"] {
       margin-right: 5px;
+      transform: scale(1.2);
     }
     button {
       background-color: #007bff;
@@ -100,14 +108,22 @@
       border-radius: 4px;
       cursor: pointer;
       width: 100%;
-      font-size: 16px;
+      font-size: 14px;
+      margin-top: 10px;
+      box-sizing: border-box;
     }
     button:hover {
       background-color: #0056b3;
     }
+    #next-unit {
+      background-color: #28a745;
+    }
+    #next-unit:hover {
+      background-color: #218838;
+    }
     .result {
-      margin-top: 10px;
-      font-size: 14px;
+      margin-top: 8px;
+      font-size: 12px;
     }
     .correct {
       color: green;
@@ -116,13 +132,15 @@
       color: red;
     }
     #total-result {
-      margin-top: 20px;
+      margin-top: 15px;
       font-weight: bold;
       text-align: center;
+      font-size: 14px;
     }
     a {
       color: #007bff;
       text-decoration: underline;
+      font-size: 12px;
     }
     a:hover {
       color: #0056b3;
@@ -130,6 +148,42 @@
     html, body {
       height: auto;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 5px;
+        font-size: 14px;
+      }
+      .container {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 18px;
+      }
+      select {
+        font-size: 12px;
+        padding: 6px;
+      }
+      .question p {
+        font-size: 12px;
+      }
+      label {
+        font-size: 12px;
+      }
+      button {
+        font-size: 12px;
+        padding: 8px;
+      }
+      .result {
+        font-size: 11px;
+      }
+      #total-result {
+        font-size: 12px;
+      }
+      a {
+        font-size: 11px;
+      }
     }
   </style>
 </head>
@@ -141,9 +195,11 @@
       <option value="modeling">物件資料結構塑模</option>
       <option value="interaction">互動行為塑模</option>
       <option value="activity">作業行為塑模</option>
+      <option value="component">系統元件與結構塑模</option>
     </select>
     <div id="quiz"></div>
     <button id="submit">提交答案</button>
+    <button id="next-unit" style="display: none;">下一個單元</button>
     <div id="total-result"></div>
   </div>
 
@@ -646,17 +702,135 @@
           ],
           correct: 'C'
         }
+      ],
+      component: [
+        {
+          id: 'q1',
+          text: '元件圖主要是描述何種元件之間的靜態結構關係？',
+          type: 'radio',
+          options: [
+            { value: 'A', label: '軟體' },
+            { value: 'B', label: '使用個案' },
+            { value: 'C', label: '硬體' },
+            { value: 'D', label: '活動' }
+          ],
+          correct: 'A'
+        },
+        {
+          id: 'q2',
+          text: '以下何者不能是元件圖中的元件？',
+          type: 'radio',
+          options: [
+            { value: 'A', label: '可執行檔' },
+            { value: 'B', label: '程式檔' },
+            { value: 'C', label: '資料庫' },
+            { value: 'D', label: '智慧型手機' }
+          ],
+          correct: 'D'
+        },
+        {
+          id: 'q3',
+          text: '附件中的圖形是那一種UML圖？',
+          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam.33219/kques.803640/715112fc4b56b3e5c054fd697c41e80b.png',
+          type: 'radio',
+          options: [
+            { value: 'A', label: '部署圖' },
+            { value: 'B', label: '元件圖' },
+            { value: 'C', label: '活動圖' },
+            { value: 'D', label: '循序圖' }
+          ],
+          correct: 'B'
+        },
+        {
+          id: 'q4',
+          text: '附圖中有多少個介面？',
+          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam.33219/kques.803642/ce556f858750f3d74439fc948170f65d.png',
+          type: 'radio',
+          options: [
+            { value: 'A', label: '1' },
+            { value: 'B', label: '2' },
+            { value: 'C', label: '3' },
+            { value: 'D', label: '4' }
+          ],
+          correct: 'B'
+        },
+        {
+          id: 'q5',
+          text: '在元件圖中，介面通常用那些符號來表示？（多選題）',
+          type: 'checkbox',
+          options: [
+            { value: 'A', label: '小空心圓' },
+            { value: 'B', label: '類別符號' },
+            { value: 'C', label: '表格符號' },
+            { value: 'D', label: '三角符號' }
+          ],
+          correct: ['A', 'B']
+        },
+        {
+          id: 'q6',
+          text: '附件中的圖形是那一種UML圖？',
+          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam.33219/kques.803641/4ed36153cacdea6217ec62923ce29776.png',
+          type: 'radio',
+          options: [
+            { value: 'A', label: '類別圖' },
+            { value: 'B', label: '狀態圖' },
+            { value: 'C', label: '元件圖' },
+            { value: 'D', label: '部署圖' }
+          ],
+          correct: 'D'
+        },
+        {
+          id: 'q7',
+          text: '附圖中有多少個節點？',
+          image: 'https://flipclass.stust.edu.tw/sysdata/attach/kexam.33219/kques.803643/731c1867986f22cdbb9300f4300c84c2.png',
+          type: 'radio',
+          options: [
+            { value: 'A', label: '2' },
+            { value: 'B', label: '3' },
+            { value: 'C', label: '4' },
+            { value: 'D', label: '5' }
+          ],
+          correct: 'C'
+        },
+        {
+          id: 'q8',
+          text: '使用者自行定義新的UML造型(stereotypes)，要以何種符號去標示其用途？',
+          type: 'radio',
+          options: [
+            { value: 'A', label: '{{ }}' },
+            { value: 'B', label: '<< >>' },
+            { value: 'C', label: '" "' },
+            { value: 'D', label: '(( ))' }
+          ],
+          correct: 'B'
+        },
+        {
+          id: 'q9',
+          text: '以下何者不能是部署圖中的節點(nodes)？',
+          type: 'radio',
+          options: [
+            { value: 'A', label: '伺服器' },
+            { value: 'B', label: '平板電腦' },
+            { value: 'C', label: '區域網路' },
+            { value: 'D', label: '作業系統' }
+          ],
+          correct: 'D'
+        }
       ]
     };
 
     const quizSelect = document.getElementById('quiz-select');
     const quizContainer = document.getElementById('quiz');
     const submitButton = document.getElementById('submit');
+    const nextUnitButton = document.getElementById('next-unit');
     const totalResult = document.getElementById('total-result');
+
+    const quizOrder = ['basic', 'modeling', 'interaction', 'activity', 'component'];
 
     function renderQuiz(quizKey) {
       quizContainer.innerHTML = '';
       totalResult.innerHTML = '';
+      nextUnitButton.style.display = 'none';
       const questions = quizzes[quizKey];
       try {
         questions.forEach((q, index) => {
@@ -718,6 +892,18 @@
       });
 
       totalResult.innerHTML = `總得分：${score} / ${total}（${(score / total * 100).toFixed(2)}%）`;
+      nextUnitButton.style.display = 'block';
+      const currentIndex = quizOrder.indexOf(quizSelect.value);
+      nextUnitButton.textContent = currentIndex < quizOrder.length - 1 ? '下一個單元' : '回到第一單元';
+    });
+
+    // 下一個單元
+    nextUnitButton.addEventListener('click', () => {
+      const currentIndex = quizOrder.indexOf(quizSelect.value);
+      const nextIndex = (currentIndex + 1) % quizOrder.length;
+      const nextQuizKey = quizOrder[nextIndex];
+      quizSelect.value = nextQuizKey;
+      renderQuiz(nextQuizKey);
     });
   </script>
 </body>
