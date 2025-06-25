@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTable();
     initializeChat();
     loadSampleData();
+    // 直接測試 serverless function 是否可用
+    testGeminiAPI();
 });
 
 // 表格初始化
