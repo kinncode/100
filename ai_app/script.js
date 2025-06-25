@@ -42,12 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTable();
     initializeChat();
     loadSampleData();
-    
-    if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
-        addMessage('ai', '⚠️ 請在script.js中設定您的Gemini API KEY以啟用智能對話功能。目前使用本地模擬模式。');
-    } else {
-        testGeminiAPI();
-    }
 });
 
 // 表格初始化
