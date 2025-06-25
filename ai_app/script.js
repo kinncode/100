@@ -334,8 +334,17 @@ async function callGeminiAPI(userMessage) {
 // 測試API連接
 async function testGeminiAPI() {
     try {
-        const response = await callGeminiAPI('你好');
-        addMessage('ai', response ? `✅ Gemini API已連接！${response}` : '⚠️ API連接失敗，使用本地模式。');
+        const response = await fetch('/netlify/functions/gemini', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                messages: [],
+                tableData: []
+            })
+        });
+        if (!response.ok) throw new Error('API call failed');
+        const data = await response.json();
+        addMessage('ai', `✅ Gemini API已連接！${data.reply}`);
     } catch (error) {
         addMessage('ai', '⚠️ API連接測試失敗，使用本地模式。');
     }
