@@ -1,5 +1,5 @@
 // Gemini API 配置
-const GEMINI_API_URL = '/netlify/functions/gemini';
+const GEMINI_API_URL = '/.netlify/functions/gemini';
 // 全局變數
 let tableData = [];
 let editingRow = null;
@@ -334,7 +334,7 @@ async function callGeminiAPI(userMessage) {
 // 測試API連接
 async function testGeminiAPI() {
     try {
-        const response = await fetch('/netlify/functions/gemini', {
+        const response = await fetch('/.netlify/functions/gemini', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
